@@ -14,6 +14,11 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const ISIValuesSchema = z.object({
   padding: z.coerce
@@ -109,7 +114,7 @@ export default function ISIForm({
       })
       .join("");
 
-    const gutterWidthValue = gutterWidth ? gutterWidth + "px" : "30px";
+    const gutterWidthValue = gutterWidth ? gutterWidth : "30px";
     const tableColorValue = tableColor ? tableColor : "#FFFFFE";
 
     const generatedISI = `<table cellpadding="0" cellspacing="0" border="0" width="600" style="min-width: 600px;" class="wrapper" role="presentation" bgcolor="${tableColorValue}">\n\t<tr>\n\t\t<td width="${gutterWidthValue}" class="gutter">&nbsp;</td>\n\t\t<td>\n\t\t\t<table cellpadding="0" cellspacing="0" border="0" width="100%">${generatedISIRows}\n\t\t\t</table>\n\t\t</td>\n\t\t<td width="${gutterWidthValue}" class="gutter">&nbsp;</td>\n\t</tr>\n</table>`;
@@ -120,7 +125,7 @@ export default function ISIForm({
   return (
     <Form {...form}>
       <form
-        className="space-y-3 md:grid md:w-1/2 md:grid-cols-2 md:gap-3 md:space-y-0"
+        className="space-y-3 md:grid md:w-full md:grid-cols-2 md:gap-3 md:space-y-0"
         onSubmit={form.handleSubmit(handleISIValues)}
       >
         <FormField
@@ -289,6 +294,16 @@ export default function ISIForm({
           render={({ field }) => (
             <FormItem className="col-span-2">
               <FormLabel htmlFor="ISI">Your ISI text</FormLabel>
+              <Tooltip>
+                <TooltipTrigger asChild className="inline-block ml-1 text-slate-600 cursor-pointer">
+                  <p>(?)</p>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="mb-2">Insert the following symbols to format your text:</p>
+                  <p><strong>**</strong> Bold text</p>
+                  <p><strong>&ndash;</strong> Bullet point</p>
+                </TooltipContent>
+              </Tooltip>
               <FormControl>
                 <Textarea
                   className="min-h-60 resize-none scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800"

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { ClipboardCheck, ClipboardList } from "lucide-react";
 import { useToast } from "./components/ui/use-toast";
 import ISIForm from "./components/isi-form";
+import { TooltipProvider } from "./components/ui/tooltip";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 function App() {
   const [generatedISI, setGeneratedISI] = useState("");
@@ -30,7 +32,8 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="flex min-h-screen flex-col items-center justify-center">
+      <TooltipProvider>
+        <div className="flex min-h-screen flex-col items-center justify-center">
         <div className="fixed right-2 top-2">
           <ModeToggle />
         </div>
@@ -46,10 +49,26 @@ function App() {
           </h3>
 
           <div className="flex w-full flex-col justify-center gap-6 md:flex-row">
-            <ISIForm
-              setGeneratedISI={setGeneratedISI}
-              setIsClipboardWritten={setIsClipboardWritten}
-            />
+            <div>
+              <Tabs defaultValue="email" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="email">Email</TabsTrigger>
+                  <TabsTrigger value="banner">Banner</TabsTrigger>
+                </TabsList>
+                <TabsContent value="email" className="mt-6">
+                  <ISIForm
+                    setGeneratedISI={setGeneratedISI}
+                    setIsClipboardWritten={setIsClipboardWritten}
+                  />
+                </TabsContent>
+                <TabsContent value="banner" className="mt-6">
+                  <ISIForm
+                    setGeneratedISI={setGeneratedISI}
+                    setIsClipboardWritten={setIsClipboardWritten}
+                  />
+                </TabsContent>
+              </Tabs>
+            </div>
 
             {generatedISI && (
               <div className="relative flex max-h-[635px] md:w-1/2">
@@ -70,6 +89,7 @@ function App() {
           </div>
         </div>
       </div>
+      </TooltipProvider>
     </ThemeProvider>
   );
 }
