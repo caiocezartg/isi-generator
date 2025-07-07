@@ -107,9 +107,9 @@ function App() {
               )}
 
               {generatedISI && generatedCSSBanner && (
-                <div className="flex flex-col">
+                <div className="flex flex-col md:w-1/2">
                   <p className="mb-2 text-sm font-bold">HTML</p>
-                  <div className="relative flex max-h-[270px]">
+                  <div className="relative flex max-h-[270px] w-full">
                     <Button
                       size="icon"
                       variant="outline"
@@ -129,7 +129,7 @@ function App() {
                   </div>
 
                   <p className="mb-2 mt-4 text-sm font-bold">CSS</p>
-                  <div className="relative flex max-h-[270px]">
+                  <div className="relative flex max-h-[270px] w-full">
                     <Button
                       size="icon"
                       variant="outline"
