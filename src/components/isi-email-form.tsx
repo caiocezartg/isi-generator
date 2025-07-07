@@ -19,18 +19,27 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useIsiStore } from "@/store/useIsiStore"; 
+import { useIsiStore } from "@/store/useIsiStore";
 
 const ISIValuesSchema = z.object({
   padding: z.coerce.number().optional(),
   fontSize: z.coerce.number().optional(),
-  fontColor: z.string().regex(/^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$|^$/i).optional(),
-  tableColor: z.string().regex(/^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$|^$/i).optional(),
+  fontColor: z
+    .string()
+    .regex(/^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$|^$/i)
+    .optional(),
+  tableColor: z
+    .string()
+    .regex(/^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$|^$/i)
+    .optional(),
   lineHeight: z.coerce.number().optional(),
   gutterWidth: z.coerce.number().optional(),
   ISI: z.string().min(1, { message: "ISI text is required" }),
   hasBullets: z.boolean().optional(),
-  bulletColor: z.string().regex(/^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$|^$/i).optional(),
+  bulletColor: z
+    .string()
+    .regex(/^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$|^$/i)
+    .optional(),
 });
 
 type ISIValues = z.infer<typeof ISIValuesSchema>;
@@ -59,7 +68,7 @@ export default function ISIEmailForm() {
 
   //   setFormText(newText);
   // };
-  
+
   function handleISIValues(values: ISIValues) {
     const {
       padding,
@@ -88,16 +97,17 @@ export default function ISIEmailForm() {
       .filter((row) => row.length > 0)
       .map((text) => {
         if (text.startsWith("**")) return generateRow(text.substring(2), true);
-        if (text.startsWith("-")) return generateRow(text.substring(1), false, true);
+        if (text.startsWith("-"))
+          return generateRow(text.substring(1), false, true);
         return generateRow(text);
       })
       .join("");
 
-    const generatedISI = `<table cellpadding="0" cellspacing="0" border="0" width="600" style="min-width: 600px;" class="wrapper" role="presentation" bgcolor="${tableColor || '#FFFFFE'}">\n\t<tr>\n\t\t<td width="${gutterWidth || '30'}" class="gutter"> </td>\n\t\t<td>\n\t\t\t<table cellpadding="0" cellspacing="0" border="0" width="100%">${generatedISIRows}\n\t\t\t</table>\n\t\t</td>\n\t\t<td width="${gutterWidth || '30'}" class="gutter"> </td>\n\t</tr>\n</table>`;
-    
-    setGeneratedCode(generatedISI); 
+    const generatedISI = `<table cellpadding="0" cellspacing="0" border="0" width="600" style="min-width: 600px;" class="wrapper" role="presentation" bgcolor="${tableColor || "#FFFFFE"}">\n\t<tr>\n\t\t<td width="${gutterWidth || "30"}" class="gutter">&nbsp;</td>\n\t\t<td>\n\t\t\t<table cellpadding="0" cellspacing="0" border="0" width="100%">${generatedISIRows}\n\t\t\t</table>\n\t\t</td>\n\t\t<td width="${gutterWidth || "30"}" class="gutter">&nbsp;</td>\n\t</tr>\n</table>`;
+
+    setGeneratedCode(generatedISI);
   }
-  
+
   return (
     <Form {...form}>
       <form
@@ -105,198 +115,198 @@ export default function ISIEmailForm() {
         onSubmit={form.handleSubmit(handleISIValues)}
       >
         <FormField
-                  control={form.control}
-                  name="padding"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="padding">
-                        Spacing between lines (px)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Default: 10px"
-                          id="padding"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+          control={form.control}
+          name="padding"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="padding">
+                Spacing between lines (px)
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Default: 10px"
+                  id="padding"
+                  {...field}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
-                  control={form.control}
-                  name="tableColor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="table-color">Table color (#)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Default: #FFFFFE"
-                          id="table-color"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+          control={form.control}
+          name="tableColor"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="table-color">Table color (#)</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Default: #FFFFFE"
+                  id="table-color"
+                  {...field}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
-                  control={form.control}
-                  name="fontSize"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="font-size">Font size (px)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Default: 12px"
-                          id="font-size"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+          control={form.control}
+          name="fontSize"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="font-size">Font size (px)</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Default: 12px"
+                  id="font-size"
+                  {...field}
                 />
-        
-                <FormField
-                  control={form.control}
-                  name="fontColor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="font-color">Font color (#)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Default: #000000"
-                          id="font-color"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="fontColor"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="font-color">Font color (#)</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Default: #000000"
+                  id="font-color"
+                  {...field}
                 />
-        
-                <FormField
-                  control={form.control}
-                  name="lineHeight"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="line-height">Line height (px)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Default: 16px"
-                          id="line-height"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="lineHeight"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="line-height">Line height (px)</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Default: 16px"
+                  id="line-height"
+                  {...field}
                 />
-        
-                <FormField
-                  control={form.control}
-                  name="gutterWidth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="gutter-width">Gutter width (px)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Default: 30px"
-                          id="gutter-width"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="gutterWidth"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="gutter-width">Gutter width (px)</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Default: 30px"
+                  id="gutter-width"
+                  {...field}
                 />
-        
-                <FormField
-                  control={form.control}
-                  name="hasBullets"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center space-x-4">
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          id="hasBullets"
-                        />
-                      </FormControl>
-                      <FormLabel className="!mt-0" htmlFor="hasBullets">
-                        Change ISI bullets color
-                      </FormLabel>
-                    </FormItem>
-                  )}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="hasBullets"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center space-x-4">
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  id="hasBullets"
                 />
-        
-                <FormField
-                  control={form.control}
-                  name="bulletColor"
-                  render={({ field }) => (
-                    <FormItem>
-                      {/* <FormLabel
+              </FormControl>
+              <FormLabel className="!mt-0" htmlFor="hasBullets">
+                Change ISI bullets color
+              </FormLabel>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="bulletColor"
+          render={({ field }) => (
+            <FormItem>
+              {/* <FormLabel
                         htmlFor="bullet-color"
                         className={`${!form.getValues("hasBullets") ? "text-zinc-800" : "text-white"}`}
                       >
                         Bullet color (#)
                       </FormLabel> */}
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Default: #000000"
-                          id="bullet-color"
-                          disabled={!form.getValues("hasBullets")}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Default: #000000"
+                  id="bullet-color"
+                  disabled={!form.getValues("hasBullets")}
+                  {...field}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
-                  control={form.control}
-                  name="ISI"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2">
-                      <FormLabel htmlFor="ISI">Your ISI text</FormLabel>
-                      <Tooltip>
-                        <TooltipTrigger
-                          asChild
-                          className="ml-1 inline-block cursor-pointer text-slate-600"
-                        >
-                          <p>(?)</p>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="mb-2">
-                            Insert the following symbols to format your text:
-                          </p>
-                          <p>
-                            <strong>**</strong>: Bold text
-                          </p>
-                          <p>
-                            <strong>&ndash;</strong>: Bullet point
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                      <FormControl>
-                        <Textarea
-                          className="min-h-60 resize-none scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+          control={form.control}
+          name="ISI"
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <FormLabel htmlFor="ISI">Your ISI text</FormLabel>
+              <Tooltip>
+                <TooltipTrigger
+                  asChild
+                  className="ml-1 inline-block cursor-pointer text-slate-600"
+                >
+                  <p>(?)</p>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="mb-2">
+                    Insert the following symbols to format your text:
+                  </p>
+                  <p>
+                    <strong>**</strong>: Bold text
+                  </p>
+                  <p>
+                    <strong>&ndash;</strong>: Bullet point
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+              <FormControl>
+                <Textarea
+                  className="min-h-60 resize-none scrollbar scrollbar-track-transparent scrollbar-thumb-slate-800"
+                  {...field}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <Button
           type="submit"

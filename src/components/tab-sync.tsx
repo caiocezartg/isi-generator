@@ -1,34 +1,49 @@
-import { useEffect } from 'react';
-import qs from 'qs';
-import { useIsiStore } from '../store/useIsiStore';
+import { useEffect } from "react";
+import { useIsiStore } from "../store/useIsiStore";
 
 export const TabSync = () => {
   const activeTab = useIsiStore((state) => state.activeTab);
   const setActiveTab = useIsiStore((state) => state.setActiveTab);
 
+  // Effect 1: Sync store with URL on mount and popstate
   useEffect(() => {
-    const queryString = window.location.search.substring(1);
-    const parsedParams = qs.parse(queryString);
-    const tabFromUrl = parsedParams.tab;
+    const getTabFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+      return tab === "email" || tab === "banner" ? tab : null;
+    };
 
-    if (typeof tabFromUrl === 'string' && (tabFromUrl === 'email' || tabFromUrl === 'banner')) {
-      if (tabFromUrl !== activeTab) {
-        setActiveTab(tabFromUrl);
+    const syncStoreWithUrl = () => {
+      const urlTab = getTabFromUrl();
+      if (urlTab && urlTab !== activeTab) {
+        setActiveTab(urlTab);
+      } else if (!urlTab) {
+        const params = new URLSearchParams(window.location.search);
+        params.set("tab", activeTab);
+        window.history.replaceState(
+          {},
+          "",
+          `${window.location.pathname}?${params}`,
+        );
       }
-    }
-  }, []); 
+    };
 
+    syncStoreWithUrl();
+
+    window.addEventListener("popstate", syncStoreWithUrl);
+
+    return () => {
+      window.removeEventListener("popstate", syncStoreWithUrl);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Effect 2: Sync URL with store when activeTab changes
   useEffect(() => {
-    const queryString = window.location.search.substring(1);
-    const parsedParams = qs.parse(queryString);
-
-    if (activeTab !== parsedParams.tab) {
-      const newParams = { ...parsedParams, tab: activeTab };
-      const newQueryString = qs.stringify(newParams);
-
-      const newUrl = `${window.location.pathname}?${newQueryString}`;
-
-      window.history.pushState({}, '', newUrl);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") !== activeTab) {
+      params.set("tab", activeTab);
+      window.history.pushState({}, "", `${window.location.pathname}?${params}`);
     }
   }, [activeTab]);
 

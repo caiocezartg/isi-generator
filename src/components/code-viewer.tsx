@@ -9,11 +9,14 @@ interface CodeViewerProps {
 }
 
 export function CodeViewer({ title, code }: CodeViewerProps) {
-  if (!title || !code) {
-    return <p className="text-sm text-red-500">Invalid code or title provided.</p>;
-  }
   const [isCopied, setIsCopied] = useState(false);
   const { toast } = useToast();
+
+  if (!title || !code) {
+    return (
+      <p className="text-sm text-red-500">Invalid code or title provided.</p>
+    );
+  }
 
   const copyToClipboard = () => {
     if (!code) return;
@@ -25,7 +28,10 @@ export function CodeViewer({ title, code }: CodeViewerProps) {
         setTimeout(() => setIsCopied(false), 2000);
       })
       .catch(() => {
-        toast({ description: `Failed to copy ${title}.`, variant: "destructive" });
+        toast({
+          description: `Failed to copy ${title}.`,
+          variant: "destructive",
+        });
       });
   };
 
@@ -40,10 +46,16 @@ export function CodeViewer({ title, code }: CodeViewerProps) {
           onClick={copyToClipboard}
           title={`Copy ${title}`}
         >
-          {isCopied ? <ClipboardCheck size={16} /> : <ClipboardList size={16} />}
+          {isCopied ? (
+            <ClipboardCheck size={16} />
+          ) : (
+            <ClipboardList size={16} />
+          )}
         </Button>
         <div className="w-full overflow-y-auto rounded-md border-2 p-4 pr-12 scrollbar scrollbar-track-transparent scrollbar-thumb-zinc-800">
-          <pre className="text-xs">{code || `// ${title} code will appear here...`}</pre>
+          <pre className="text-xs">
+            {code || `// ${title} code will appear here...`}
+          </pre>
         </div>
       </div>
     </div>

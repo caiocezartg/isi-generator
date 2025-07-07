@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Smartphone, Monitor } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Smartphone, Monitor } from "lucide-react";
 
 interface PreviewProps {
   htmlContent: string;
@@ -8,10 +8,15 @@ interface PreviewProps {
 }
 
 export function Preview({ htmlContent, cssContent }: PreviewProps) {
+  const [view, setView] = useState<"desktop" | "mobile">("desktop");
+
   if (!htmlContent || !cssContent) {
-    return <p className="text-sm text-red-500">Invalid HTML or CSS content provided.</p>;
+    return (
+      <p className="text-sm text-red-500">
+        Invalid HTML or CSS content provided.
+      </p>
+    );
   }
-  const [view, setView] = useState<'desktop' | 'mobile'>('desktop');
 
   const srcDoc = `
     <html>
@@ -28,13 +33,13 @@ export function Preview({ htmlContent, cssContent }: PreviewProps) {
   `;
 
   const iframeWidth = {
-    desktop: '100%',
-    mobile: '375px',
+    desktop: "100%",
+    mobile: "375px",
   };
 
   const iframeMaxWidth = {
-    desktop: '600px',
-    mobile: '375px',
+    desktop: "600px",
+    mobile: "375px",
   };
 
   return (
@@ -43,18 +48,18 @@ export function Preview({ htmlContent, cssContent }: PreviewProps) {
         <p className="text-sm font-bold">Preview</p>
         <div className="flex gap-1">
           <Button
-            variant={view === 'desktop' ? 'secondary' : 'ghost'}
+            variant={view === "desktop" ? "secondary" : "ghost"}
             size="icon"
-            onClick={() => setView('desktop')}
+            onClick={() => setView("desktop")}
             title="Desktop View"
             className="h-8 w-8"
           >
             <Monitor size={16} />
           </Button>
           <Button
-            variant={view === 'mobile' ? 'secondary' : 'ghost'}
+            variant={view === "mobile" ? "secondary" : "ghost"}
             size="icon"
-            onClick={() => setView('mobile')}
+            onClick={() => setView("mobile")}
             title="Mobile View"
             className="h-8 w-8"
           >
@@ -71,7 +76,7 @@ export function Preview({ htmlContent, cssContent }: PreviewProps) {
           style={{
             width: iframeWidth[view],
             maxWidth: iframeMaxWidth[view],
-            margin: '0 auto',
+            margin: "0 auto",
           }}
         />
       </div>
