@@ -18,7 +18,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 const ISIValuesSchema = z.object({
   padding: z.coerce
@@ -33,17 +33,8 @@ const ISIValuesSchema = z.object({
       message: "Font color needs to be a valid hex color",
     })
     .optional(),
-  tableColor: z
-    .string()
-    .regex(/^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))$|^$/i, {
-      message: "Table color needs to be a valid hex color",
-    })
-    .optional(),
   lineHeight: z.coerce
     .number({ message: "Line height needs to be a number" })
-    .optional(),
-  gutterWidth: z.coerce
-    .number({ message: "Gutter needs to be a number" })
     .optional(),
   ISI: z.string().min(1, { message: "ISI text is required" }),
   hasBullets: z.boolean().optional(),
@@ -58,11 +49,13 @@ const ISIValuesSchema = z.object({
 type ISIValues = z.infer<typeof ISIValuesSchema>;
 type ISIFormProps = {
   setGeneratedISI: React.Dispatch<React.SetStateAction<string>>;
+  setGeneratedCSSBanner: React.Dispatch<React.SetStateAction<string>>;
   setIsClipboardWritten: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function ISIForm({
+export default function ISIBannerForm({
   setGeneratedISI,
+  setGeneratedCSSBanner,
   setIsClipboardWritten,
 }: ISIFormProps) {
   const form = useForm<ISIValues>({
@@ -71,9 +64,7 @@ export default function ISIForm({
       padding: 10,
       fontSize: 16,
       fontColor: "#000000",
-      tableColor: "#FFFFFE",
       lineHeight: 16,
-      gutterWidth: 30,
       ISI: "",
       hasBullets: false,
       bulletColor: "#000000",
@@ -84,9 +75,7 @@ export default function ISIForm({
     padding,
     fontSize,
     fontColor,
-    tableColor,
     lineHeight,
-    gutterWidth,
     ISI,
     bulletColor,
   }: ISIValues) {
@@ -95,13 +84,20 @@ export default function ISIForm({
       isBold: boolean = false,
       isBullet: boolean = false,
     ) => {
-      const commonStyle = `font-family: Arial, Helvetica, sans-serif; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${fontColor}; padding-bottom: ${padding}px; font-weight: ${isBold ? "bold;" : "normal;"}`;
-
       if (isBullet) {
-        return (text = `\n\t\t\t\t<tr>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<table cellpadding="0" cellspacing="0" border="0" width="100%">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<td width="12" valign="top" align="left" style="font-family: Arial, Helvetica, sans-serif; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${bulletColor}; padding-bottom: ${padding}px; font-weight: bold;">&bull;</td>\n\t\t\t\t\t\t\t\t<td valign="top" align="left" style="${commonStyle}">${text}</td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>`);
+        const formattedList = text
+          .split("/")
+          .map((item) => `<li>${item}</li>`)
+          .join("\n\t\t\t");
+
+        return (text = `\n\t\t<ul>\n\t\t\t${formattedList}\n\t\t</ul>`);
       }
 
-      return `\n\t\t\t\t<tr>\n\t\t\t\t\t<td align="left" style="${commonStyle}">\n\t\t\t\t\t\t${text}\n\t\t\t\t\t</td>\n\t\t\t\t</tr>`;
+      if (isBold) {
+        return (text = `\n\t\t<p><strong>${text}</strong></p>`);
+      }
+
+      return `\n\t\t<p>${text}</p>`;
     };
 
     const generatedISIRows = ISI.split(/\r?\n|\r/)
@@ -114,13 +110,13 @@ export default function ISIForm({
       })
       .join("");
 
-    const gutterWidthValue = gutterWidth ? gutterWidth : "30px";
-    const tableColorValue = tableColor ? tableColor : "#FFFFFE";
+    const generatedCSS = `#isi_container {\n\tfont-family: Arial, Helvetica, sans-serif;\n\tvisibility: visible;\n\toverflow-y: auto;\n\tbackground-image: none;\n\tbackground-color: rgb(255, 255, 255);\n\tfont-size: ${fontSize}px;\n\tline-height: ${lineHeight}px;\n\toverflow-x: hidden !important;\n}\n\n#isi_container p {\n\tmargin-top: 0px;\n\tcolor: ${fontColor};\n\tfont-size: ${fontSize}px;\n\tmargin-bottom: ${padding}px;\n}\n\n#isi_container h1 {\n\tmargin: 0px 0px 5px;\n\tcolor: ${fontColor};\n\tfont-size: ${Number(fontSize) + 3}px;\n}\n\n#isi_container h2 {\n\tmargin: 0px 0px 5px;\n\tcolor: ${fontColor};\n\tfont-size: ${Number(fontSize) + 2}px;\n\tfont-weight: bold;\n}\n\n#isi_container h3 {\n\tmargin: 5px 0px 0px;\n\tcolor: ${fontColor};\n\tfont-size: ${Number(fontSize) + 1}px;\n}\n\n#isi_container h4 {\n\tmargin: 0px;\n\tfont-size: ${fontSize}px;\n\tcolor: ${fontColor};\n}\n\n#::-webkit-scrollbar {\n\twidth: 6px;\n\tborder-radius: 3px;\n\tpadding-top: 10px;\n}\n\n::-webkit-scrollbar-track {\n\tbox-shadow: rgb(192, 192, 192) 0px 0px 2px inset;\n\tborder-radius: 3px;\n}\n\n::-webkit-scrollbar-thumb {\n\tborder-radius: 3px;\n\tbackground: rgb(2, 0, 67);\n\tbox-shadow: rgb(2, 0, 67) 0px 0px 2px inset;\n}\n\n::-webkit-scrollbar-thumb:window-inactive {\n\tbackground: rgb(85, 119, 137);\n}\n\nul {\n\tpadding-left: 11px;\n\tmargin: 2px 5px;\n\tpadding-inline-start: 10px;\n\tlist-style: none;\n}\n\nul li {\n\tcolor: ${fontColor};\n\tfont-size: ${fontSize}px;\n\tline-height: ${lineHeight}px;\n\tpadding-bottom: 6px;\n\tmargin-left: -6px;\n}\n\nul li::before {\n\tcontent: "•";\n\tcolor: ${bulletColor};\n\tdisplay: inline-block;\n\twidth: 9px;\n\tmargin-left: -9px;\n}\n\nsup {\n\tfont-size: 7px;\n\tvertical-align: baseline;\n\tposition: relative;\n\ttop: -0.4em;\n}\n`;
 
-    const generatedISI = `<table cellpadding="0" cellspacing="0" border="0" width="600" style="min-width: 600px;" class="wrapper" role="presentation" bgcolor="${tableColorValue}">\n\t<tr>\n\t\t<td width="${gutterWidthValue}" class="gutter">&nbsp;</td>\n\t\t<td>\n\t\t\t<table cellpadding="0" cellspacing="0" border="0" width="100%">${generatedISIRows}\n\t\t\t</table>\n\t\t</td>\n\t\t<td width="${gutterWidthValue}" class="gutter">&nbsp;</td>\n\t</tr>\n</table>`;
+    const generatedISI = `<div id="isi_container">\n\t<div id="isi">${generatedISIRows}\n\t</div>\n</div>`;
 
     setIsClipboardWritten(false);
     setGeneratedISI(generatedISI);
+    setGeneratedCSSBanner(generatedCSS);
   }
   return (
     <Form {...form}>
@@ -134,32 +130,13 @@ export default function ISIForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="padding">
-                Padding between lines (px)
+                Spacing between lines (px)
               </FormLabel>
               <FormControl>
                 <Input
                   type="text"
                   placeholder="Default: 10px"
                   id="padding"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="tableColor"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="table-color">Table color (#)</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Default: #FFFFFE"
-                  id="table-color"
                   {...field}
                 />
               </FormControl>
@@ -227,25 +204,6 @@ export default function ISIForm({
 
         <FormField
           control={form.control}
-          name="gutterWidth"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="gutter-width">Gutter width (px)</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Default: 30px"
-                  id="gutter-width"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="hasBullets"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center space-x-4">
@@ -268,12 +226,6 @@ export default function ISIForm({
           name="bulletColor"
           render={({ field }) => (
             <FormItem>
-              {/* <FormLabel
-                htmlFor="bullet-color"
-                className={`${!form.getValues("hasBullets") ? "text-zinc-800" : "text-white"}`}
-              >
-                Bullet color (#)
-              </FormLabel> */}
               <FormControl>
                 <Input
                   type="text"
@@ -295,13 +247,23 @@ export default function ISIForm({
             <FormItem className="col-span-2">
               <FormLabel htmlFor="ISI">Your ISI text</FormLabel>
               <Tooltip>
-                <TooltipTrigger asChild className="inline-block ml-1 text-slate-600 cursor-pointer">
+                <TooltipTrigger
+                  asChild
+                  className="ml-1 inline-block cursor-pointer text-slate-600"
+                >
                   <p>(?)</p>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className="mb-2">Insert the following symbols to format your text:</p>
-                  <p><strong>**</strong> Bold text</p>
-                  <p><strong>&ndash;</strong> Bullet point</p>
+                  <p className="mb-2">
+                    Insert the following symbols to format your text:
+                  </p>
+                  <p>
+                    <strong>**</strong>: Bold text
+                  </p>
+                  <p>
+                    <strong>&ndash;</strong>: List section - to separate each
+                    list item correctly, insert a "/" at the end of each item
+                  </p>
                 </TooltipContent>
               </Tooltip>
               <FormControl>
