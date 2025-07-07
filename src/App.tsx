@@ -8,7 +8,7 @@ import ISIBannerForm from "./components/isi-banner-form";
 import { OutputDisplay } from "./components/output-display"; 
 
 import { useIsiStore } from './store/useIsiStore';
-import { TabSync } from './components/TabSync'; 
+import { TabSync } from './components/tab-sync'; 
 
 function App() {
   const { 
