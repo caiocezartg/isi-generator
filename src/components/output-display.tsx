@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Button } from './ui/button';
 import { useToast } from './ui/use-toast';
 import {
@@ -7,8 +7,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../components/ui/accordion';
-import { ClipboardCheck, ClipboardList, Smartphone, Monitor, Trash2 } from 'lucide-react';
+import { Smartphone, Monitor, Trash2 } from 'lucide-react';
 import { useIsiStore } from '@/store/useIsiStore';
+
+const CodeBlock = lazy(() => import('./code-block'))
 
 type OutputDisplayProps = {
   htmlContent: string;
@@ -40,29 +42,6 @@ const Preview = ({ srcDoc, iframeStyle }: {
       className="h-[400px] w-full transition-all duration-300 ease-in-out"
       style={iframeStyle}
     />
-  </div>
-);
-
-const CodeBlock = ({ title, code, isCopied, onCopy }: {
-  title: string;
-  code: string;
-  isCopied: boolean;
-  onCopy: () => void;
-}) => (
-  <div className="relative flex max-h-[300px] w-full">
-    <p className="absolute left-4 top-2 z-10 text-sm font-bold">{title}</p>
-    <Button
-      size="icon"
-      variant="outline"
-      className="absolute right-2 top-2 z-10 h-8 w-8"
-      onClick={onCopy}
-      title={`Copy ${title}`}
-    >
-      {isCopied ? <ClipboardCheck size={16} /> : <ClipboardList size={16} />}
-    </Button>
-    <div className="w-full overflow-y-auto rounded-md border-2 p-4 pt-10 scrollbar scrollbar-track-transparent scrollbar-thumb-zinc-800">
-      <pre className="text-xs">{code}</pre>
-    </div>
   </div>
 );
 
@@ -136,6 +115,8 @@ export function OutputDisplay({
     ? { width: '375px', maxWidth: '100%' }
     : { width: '100%' };
 
+  const loader = () => <p>Loading...</p>;
+
   return (
     <div className="flex w-full flex-col gap-4 md:w-1/2">
       <div className="flex justify-end">
@@ -185,12 +166,14 @@ export function OutputDisplay({
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-4">
-              <CodeBlock 
-                title="HTML" 
-                code={htmlContent} 
-                isCopied={isHtmlCopied} 
-                onCopy={() => copyToClipboard({ text: htmlContent, type: 'HTML' })} 
-              />
+              <Suspense fallback={loader()}>
+                <CodeBlock 
+                  title="HTML" 
+                  code={htmlContent} 
+                  isCopied={isHtmlCopied} 
+                  onCopy={() => copyToClipboard({ text: htmlContent, type: 'HTML' })} 
+                />
+              </Suspense>
               {cssContent && (
                  <CodeBlock 
                   title="CSS" 

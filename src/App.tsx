@@ -18,8 +18,7 @@ function App() {
     generatedCss, 
     clearAll
   } = useIsiStore();
-  
-  
+
   const showOutput = generatedHtml || generatedCss;
 
   const handleTabChange = (value: string) => {
