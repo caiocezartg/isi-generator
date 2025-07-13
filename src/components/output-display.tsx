@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 import {
@@ -68,7 +68,7 @@ const CodeBlock = ({
     <Button
       size="icon"
       variant="outline"
-      className="absolute right-2 top-2 z-10 h-8 w-8"
+      className="absolute right-6 top-2 z-10 h-8 w-8"
       onClick={onCopy}
       title={`Copy ${title}`}
     >
@@ -85,19 +85,23 @@ export function OutputDisplay({
   cssContent,
   onClear,
 }: OutputDisplayProps) {
-  const [isHtmlCopied, setIsHtmlCopied] = useState(false);
-  const [isCssCopied, setIsCssCopied] = useState(false);
-  const [view, setView] = useState("desktop");
   const { toast } = useToast();
 
   const activeTab = useIsiStore((state) => state.activeTab);
+  const view = useIsiStore((state) => state.view);
+  const setView = useIsiStore((state) => state.setView);
+  const isCssCopied = useIsiStore((state) => state.isCssCopied);
+  const isHtmlCopied = useIsiStore((state) => state.isHtmlCopied);
+  const setIsHtmlCopied = useIsiStore((state) => state.setIsHtmlCopied);
+  const setIsCssCopied = useIsiStore((state) => state.setIsCssCopied);
+
   let finalCssForPreview = cssContent || "";
 
   useEffect(() => {
     if (activeTab === "banner") {
       setView("desktop");
     }
-  }, [activeTab]);
+  }, [activeTab, setView]);
 
   if (!htmlContent) {
     return <p className="text-sm text-red-500">No HTML content provided.</p>;

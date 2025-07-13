@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { Button } from "./ui/button";
 import { Smartphone, Monitor } from "lucide-react";
+import { useState } from "react";
 
 interface PreviewProps {
   htmlContent: string;

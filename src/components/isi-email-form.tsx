@@ -62,13 +62,6 @@ export default function ISIEmailForm() {
     },
   });
 
-  // const handleIsiTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   const newText = e.target.value;
-  //   form.setValue("ISI", newText, { shouldValidate: true });
-
-  //   setFormText(newText);
-  // };
-
   function handleISIValues(values: ISIValues) {
     const {
       padding,
@@ -252,12 +245,6 @@ export default function ISIEmailForm() {
           name="bulletColor"
           render={({ field }) => (
             <FormItem>
-              {/* <FormLabel
-                        htmlFor="bullet-color"
-                        className={`${!form.getValues("hasBullets") ? "text-zinc-800" : "text-white"}`}
-                      >
-                        Bullet color (#)
-                      </FormLabel> */}
               <FormControl>
                 <Input
                   type="text"
