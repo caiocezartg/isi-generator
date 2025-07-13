@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useIsiStore } from "../store/useIsiStore";
+import { useIsiStore } from "../store/use-isi-store";
 
 export const TabSync = () => {
   const activeTab = useIsiStore((state) => state.activeTab);

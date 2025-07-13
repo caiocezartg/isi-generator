@@ -5,25 +5,19 @@ import { Toaster } from "./components/ui/toaster";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import ISIEmailForm from "./components/isi-email-form";
 import ISIBannerForm from "./components/isi-banner-form";
-import { OutputDisplay } from "./components/output-display"; 
+import { OutputDisplay } from "./components/output-display";
 
-import { useIsiStore } from './store/useIsiStore';
-import { TabSync } from './components/tab-sync'; 
+import { useIsiStore } from "./store/use-isi-store";
+import { TabSync } from "./components/tab-sync";
 
 function App() {
-  const { 
-    activeTab, 
-    setActiveTab, 
-    generatedHtml, 
-    generatedCss, 
-    clearAll
-  } = useIsiStore();
-  
-  
+  const { activeTab, setActiveTab, generatedHtml, generatedCss, clearAll } =
+    useIsiStore();
+
   const showOutput = generatedHtml || generatedCss;
 
   const handleTabChange = (value: string) => {
-    if (value === 'email' || value === 'banner') {
+    if (value === "email" || value === "banner") {
       setActiveTab(value);
     }
   };
@@ -33,7 +27,7 @@ function App() {
       <TooltipProvider>
         <TabSync />
 
-        <div className="bg-[var(--background)] flex min-h-screen flex-col items-center justify-center">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--background)]">
           <div className="fixed right-2 top-2">
             <ModeToggle />
           </div>
@@ -48,7 +42,7 @@ function App() {
             </h3>
 
             <div className="flex w-full flex-col justify-center gap-6 md:flex-row">
-              <div className={`w-full ${showOutput ? 'md:w-1/2' : ''}`}>
+              <div className={`w-full ${showOutput ? "md:w-1/2" : ""}`}>
                 <Tabs
                   value={activeTab}
                   onValueChange={handleTabChange}
@@ -59,11 +53,9 @@ function App() {
                     <TabsTrigger value="banner">Banner</TabsTrigger>
                   </TabsList>
                   <TabsContent value="email" className="mt-6">
-                   
                     <ISIEmailForm />
                   </TabsContent>
                   <TabsContent value="banner" className="mt-6">
-                    
                     <ISIBannerForm />
                   </TabsContent>
                 </Tabs>
@@ -73,13 +65,13 @@ function App() {
                 <OutputDisplay
                   htmlContent={generatedHtml}
                   cssContent={generatedCss}
-                  onClear={clearAll} 
+                  onClear={clearAll}
                 />
               )}
             </div>
           </div>
         </div>
-        <Toaster /> 
+        <Toaster />
       </TooltipProvider>
     </ThemeProvider>
   );

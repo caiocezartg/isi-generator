@@ -19,7 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useIsiStore } from "@/store/useIsiStore";
+import { useIsiStore } from "@/store/use-isi-store";
 
 const ISIValuesSchema = z.object({
   padding: z.coerce.number().optional(),

@@ -35,7 +35,7 @@ export const useIsiStore = create<IsiState>()(
 
       setFormText: (text) => set({ formText: text }),
 
-      setGeneratedCode: (html, css = "") =>
+      setGeneratedCode: (html, css) =>
         set({
           generatedHtml: html,
           generatedCss: css,
