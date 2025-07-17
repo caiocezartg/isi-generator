@@ -11,6 +11,7 @@ import { useIsiStore } from "@/store/use-isi-store";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { Preview } from "./preview";
 import { CodeBlock } from "./code-block";
+import { toast } from "sonner";
 
 type OutputDisplayProps = {
   htmlContent: string;
@@ -27,17 +28,32 @@ export function OutputDisplay({
   const view = useIsiStore((state) => state.view);
   const setView = useIsiStore((state) => state.setView);
 
-  const { isCopied: isHtmlCopied, copy: copyHtml } = useClipboard({
+  const {
+    isCopied: isHtmlCopied,
+    copy: copyHtml,
+    successMessage: htmlSuccessMessage,
+  } = useClipboard({
     type: "HTML",
   });
-  const { isCopied: isCssCopied, copy: copyCss } = useClipboard({
+  const {
+    isCopied: isCssCopied,
+    copy: copyCss,
+    successMessage: cssSuccessMessage,
+  } = useClipboard({
     type: "CSS",
   });
+
   useEffect(() => {
     if (activeTab === "banner") {
       setView("desktop");
     }
-  }, [activeTab, setView]);
+
+    if (htmlSuccessMessage || cssSuccessMessage) {
+      toast.success(htmlSuccessMessage || cssSuccessMessage, {
+        duration: 2000,
+      });
+    }
+  }, [activeTab, setView, htmlSuccessMessage, cssSuccessMessage]);
 
   if (!htmlContent) {
     return <p className="text-sm text-red-500">No HTML content provided.</p>;
