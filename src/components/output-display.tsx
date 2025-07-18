@@ -102,7 +102,7 @@ export function OutputDisplay({
       : { width: "600px", maxWidth: "100%" };
 
   return (
-    <div className="flex w-full flex-col gap-4 md:w-1/2">
+    <div className="flex w-full flex-col gap-4">
       <div className="flex justify-end">
         <Button onClick={onClear} variant="destructive" size="sm">
           <Trash2 className="mr-2 h-4 w-4" /> Clear All

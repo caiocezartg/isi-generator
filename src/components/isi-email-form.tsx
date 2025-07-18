@@ -295,14 +295,16 @@ export default function ISIEmailForm() {
           )}
         />
 
-        <Button
+        <button
+          className="group relative col-span-2 inline-flex h-12 overflow-hidden rounded-md p-[1px] transition-all duration-700 ease-out focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
           type="submit"
-          className="col-span-2 mt-2 w-full"
-          variant="secondary"
         >
-          <CodeXml className="mr-2" />
-          Generate your HTML code
-        </Button>
+          <span className="bg-conic-purple absolute inset-[-1000%] animate-[spin_2s_linear_infinite] transition-opacity group-hover:opacity-0" />
+          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-gradient-to-br from-zinc-900 to-background px-3 py-1 text-base font-medium text-white backdrop-blur-3xl transition-all duration-700 ease-out hover:opacity-70">
+            <CodeXml className="mr-2" />
+            Generate your code
+          </span>
+        </button>
       </form>
     </Form>
   );
