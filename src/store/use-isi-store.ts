@@ -9,6 +9,7 @@ type IsiState = {
   isHtmlCopied: boolean;
   isCssCopied: boolean;
   view: "desktop" | "mobile";
+  generatedTypes: string[]; // Novo estado para tipos gerados
   setActiveTab: (tab: "email" | "banner") => void;
   setFormText: (text: string) => void;
   setGeneratedCode: (html: string, css?: string) => void;
@@ -28,6 +29,7 @@ export const useIsiStore = create<IsiState>()(
       isHtmlCopied: false,
       isCssCopied: false,
       view: "desktop",
+      generatedTypes: [], // Inicializa vazio
 
       setActiveTab: (tab) => {
         set({ activeTab: tab });
@@ -39,6 +41,7 @@ export const useIsiStore = create<IsiState>()(
         set({
           generatedHtml: html,
           generatedCss: css,
+          generatedTypes: [...(html ? ["html"] : []), ...(css ? ["css"] : [])],
         }),
 
       setIsHtmlCopied: (value) => set({ isHtmlCopied: value }),
@@ -53,6 +56,7 @@ export const useIsiStore = create<IsiState>()(
           isHtmlCopied: false,
           isCssCopied: false,
           view: "desktop",
+          generatedTypes: [], // Limpa também os tipos
         }),
     }),
     {
@@ -65,6 +69,7 @@ export const useIsiStore = create<IsiState>()(
         isHtmlCopied: state.isHtmlCopied,
         isCssCopied: state.isCssCopied,
         view: state.view,
+        generatedTypes: state.generatedTypes, // Persiste os tipos
       }),
     },
   ),

@@ -59,7 +59,7 @@ export function OutputDisplay({
     return <p className="text-sm text-red-500">No HTML content provided.</p>;
   }
 
-  const EMAIL_BOILERPLATE_STYLES = `
+  const EMAIL_MOBILE_CSS_STYLES = `
   @media only screen and (max-width: 599px) {
     .wrapper {
       width: 100% !important;
@@ -74,7 +74,7 @@ export function OutputDisplay({
   let finalCssForPreview = cssContent || "";
 
   if (activeTab === "email" && view === "mobile") {
-    finalCssForPreview += EMAIL_BOILERPLATE_STYLES;
+    finalCssForPreview += EMAIL_MOBILE_CSS_STYLES;
   }
 
   const srcDoc = `
